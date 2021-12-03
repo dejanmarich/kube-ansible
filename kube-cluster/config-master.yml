@@ -20,7 +20,7 @@
         src: /etc/kubernetes/admin.conf
         dest: $HOME/.kube/config
         remote_src: yes
-        owner: {"{ user }}"
+        owner: "{{ user }}"
   
     - name: add storage class
       shell: kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
