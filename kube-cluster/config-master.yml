@@ -9,7 +9,7 @@
   
     - name: create .kube directory
       become: yes
-      become_user: kubeuser
+      become_user: ubuntu
       file:
         path: $HOME/.kube
         state: directory
@@ -21,9 +21,9 @@
     - name: copy admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/kubeuser/.kube/config
+        dest: /home/ubuntu/.kube/config
         remote_src: yes
-        owner: kubeuser
+        owner: ubuntu
   
     - name: add storage class
       shell: kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
@@ -33,7 +33,7 @@
 
     - name: install FPod network
       become: yes
-      become_user: kubeuser
+      become_user: ubuntu
       shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
       args:
         chdir: $HOME
