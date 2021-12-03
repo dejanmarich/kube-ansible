@@ -1,8 +1,8 @@
 - hosts: all
   become: yes
   tasks:
-    - name: create user - kubeuser
-      user: name= kubeuser append=yes state=present createhome=yes shell=/bin/bash
+    - name: create user 
+      user: name=ubuntu append=yes state=present createhome=yes shell=/bin/bash
  
     - name: allow user kubeuser to have passwordless sudo
       lineinfile:
