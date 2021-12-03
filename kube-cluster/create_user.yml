@@ -2,15 +2,22 @@
   become: yes
   tasks:
     - name: create user 
-      user: name=ubuntu append=yes state=present createhome=yes shell=/bin/bash
+      user: name={{ config.username }} append=yes state=present createhome=yes shell=/bin/bash
  
     - name: allow user kubeuser to have passwordless sudo
       lineinfile:
         dest: /etc/sudoers
-        line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
+        line: '{{ config.username }} ALL=(ALL) NOPASSWD: ALL'
         validate: 'visudo -cf %s'
  
     - name: set up authorized keys for the ubuntu user
-      authorized_key: user=ubuntu key="{{item}}"
+      authorized_key: user={{ config.username }} key="{{item}}"
       with_file:
         - ~/.ssh/id_rsa.pub
+
+    - name: Print the created user.
+      shell: id "{{ config.username }}"
+      register: new_user_created
+      
+    - debug:
+        msg: "{{ new_user_created.stdout_lines[0] }}"

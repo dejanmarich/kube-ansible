@@ -2,38 +2,38 @@
   become: yes
   tasks:
     - name: initialize the cluster
-      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 >> cluster_initialized.txt
+      shell: kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem >> cluster_initialized.txt
       args:
-        chdir: $HOME
+        chdir: $HOME/
         creates: cluster_initialized.txt
   
     - name: create .kube directory
       become: yes
-      become_user: ubuntu
+      become_user: {{ config.username }}
       file:
         path: $HOME/.kube
         state: directory
         mode: 0755
-
-    - name: taint nodes
-      shell: kubectl taint nodes --all node-role.kubernetes.io/master-
   
     - name: copy admin.conf to user's kube config
       copy:
         src: /etc/kubernetes/admin.conf
-        dest: /home/ubuntu/.kube/config
+        dest: $HOME/.kube/config
         remote_src: yes
-        owner: ubuntu
+        owner: {{ config.username }}
   
     - name: add storage class
       shell: kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+
+    - name: taint nodes
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master-
 
     - name: patch storage class
       shell: "kubectl patch storageclass local-path -p '{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'"
 
     - name: install FPod network
       become: yes
-      become_user: ubuntu
+      become_user: {{ config.username }}
       shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
       args:
         chdir: $HOME
