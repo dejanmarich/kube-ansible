@@ -25,24 +25,20 @@
         owner: "{{ user }}"
   
     - name: add storage class
-      become: yes
-      become_user: "{{ user }}"
+      remote_user: "{{ user }}"
       shell: kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
       
 
     - name: taint nodes
-      become_user: "{{ user }}"
-      become: yes
+      remote_user: "{{ user }}"
       shell: kubectl taint nodes --all node-role.kubernetes.io/master-
       
     - name: patch storage class
-      become: yes
-      become_user: "{{ user }}"
+      remote_user: "{{ user }}"
       shell: "kubectl patch storageclass local-path -p '{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}'"
 
     - name: install FPod network
-      become: yes
-      become_user: "{{ user }}"
+      remote_user: "{{ user }}"
       shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.txt
       args:
         chdir: $HOME
