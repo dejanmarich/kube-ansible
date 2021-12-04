@@ -11,7 +11,7 @@
       become: yes
       become_user: "{{ user }}"
       file:
-        path: $HOME/.kube
+        path: /home/"{{ user }}".kube
         state: directory
         mode: 0755
   
