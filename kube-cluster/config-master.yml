@@ -14,6 +14,8 @@
         path: /home/"{{ user }}".kube
         state: directory
         mode: 0755
+        owner: "{{ user }}"
+      become: yes
   
     - name: copy admin.conf to user's kube config
       copy:
