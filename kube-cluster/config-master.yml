@@ -10,7 +10,7 @@
     - name: create .kube directory
       become: yes
       file:
-        path: "/home/{{ user }}.kube"
+        path: "/home/{{ user }}/.kube"
         state: directory
         mode: 0755
         owner: "{{ user }}"
