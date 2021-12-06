@@ -1,4 +1,4 @@
 {
-    "exec-opts": ["native.cgroupdriver={{ cgroup }}"]
+    "exec-opts": ["native.cgroupdriver=systemd"]
 }
   
