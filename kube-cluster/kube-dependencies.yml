@@ -46,7 +46,7 @@
        filename: docker
        mode: 0600
 
-   - name: install Docker Engine.
+   - name: install Docker Engine
      apt: 
        name:
          - docker-ce
@@ -57,14 +57,27 @@
    - name: enable service docker, and enable persistently
      service: 
        name: docker
-       enabled: yes
+       enabled: yes   
+
+   - name: docker systemd
+     template: 
+      src: templates/daemon.json
+      dest: /etc/docker/daemon.json
+      mode: 0644
+
+   - name: restarting Docker Service
+     service:
+       name: docker
+       state: restarted
+       enabled: yes 
+
 
    - name: add Kubernetes apt-key
      apt_key:
        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
        state: present
  
-   - name: add Kubernetes' APT repository
+   - name: add Kubernetes APT repository
      apt_repository:
       repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
       state: present
