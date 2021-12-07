@@ -1,0 +1,21 @@
+- name: Create users and permissions
+  hosts: all
+  vars_files:
+    - vars/main.yml
+  roles:
+  -  role: create_user
+
+- name: Install dependencies
+  hosts: all
+  roles:
+  -  role: kube_dependencies
+
+- name: Setup Master node
+  hosts: master
+  roles:
+  -  role: config_master
+
+- name: Setup Worker node
+  hosts: workers
+  roles:
+  -  role: config_worker
